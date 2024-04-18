@@ -3,3 +3,5 @@ set_test*
 .vscode
 main
 *.o
+result.*
+rule.txt

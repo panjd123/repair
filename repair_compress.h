@@ -24,5 +24,5 @@ using pair_pos_t_hash = pair_hash<cnt_t>;
 template <typename T>
 using pair_map_t = std::unordered_map<pair_value_t, T, pair_value_t_hash>;
 
-std::pair<pair_map_t<value_t>, std::vector<value_t>> generate_rule(value_t* raw_data, size_t n, size_t dim, cnt_t threshold = 3, bool verbose = false);
+std::tuple<pair_map_t<value_t>, std::vector<cnt_t>, std::vector<value_t>> generate_rule(value_t* raw_data, size_t n, size_t dim, cnt_t threshold = 3, bool verbose = false);
 }  // namespace repair_compress

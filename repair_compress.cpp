@@ -68,7 +68,7 @@ struct pair_count_item_t {
 using heap_t = boost::heap::fibonacci_heap<pair_count_item_t>;
 // using heap_t = boost::heap::pairing_heap<pair_count_item_t>;
 
-std::pair<pair_map_t<value_t>, std::vector<value_t>> generate_rule(value_t* raw_data, size_t n, size_t dim, cnt_t threshold, bool verbose) {
+std::tuple<pair_map_t<value_t>, std::vector<cnt_t>, std::vector<value_t>> generate_rule(value_t* raw_data, size_t n, size_t dim, cnt_t threshold, bool verbose) {
     value_t max_value = *std::max_element(raw_data, raw_data + n * dim);
     value_t max_sep = max_value + 1;
     value_t max_pair_value = max_value + n + 1;
@@ -261,19 +261,22 @@ std::pair<pair_map_t<value_t>, std::vector<value_t>> generate_rule(value_t* raw_
         pair_handle.erase(cur_pair);
     }
 
-    std::vector<value_t> result;
+    std::vector<value_t> result_elist;
+    std::vector<cnt_t> result_vlist = {0};
     for (auto it : data) {
         if (it.value <= max_value || it.value > max_sep) {
-            result.push_back(it.value);
+            result_elist.push_back(it.value);
+        } else {
+            result_vlist.push_back(result_elist.size());
         }
     }
     if (verbose) {
         std::cout << std::format("memory usage: {:.2f} KB\tdisk usage: {:.2f} MB ({:.2f}%)",
                                  static_cast<double>(pair_rule.size()) * (3 * sizeof(value_t)) / 1024,
-                                 static_cast<double>(result.size()) * sizeof(value_t) / 1024 / 1024,
-                                 100 * static_cast<double>(result.size()) / n / dim)
+                                 static_cast<double>(result_elist.size()) * sizeof(value_t) / 1024 / 1024,
+                                 100 * static_cast<double>(result_elist.size()) / n / dim)
                   << std::endl;
     }
-    return {pair_rule, result};
+    return std::make_tuple(pair_rule, result_vlist, result_elist);
 }
 }  // namespace repair_compress
