@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <chrono>
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <random>
@@ -48,5 +49,12 @@ int main() {
         std::cout << std::endl;
     }
 
+    std::ofstream rule_file("rule.txt");
+    for (auto [pair, value] : rule) {
+        rule_file << pair.first << " " << pair.second << " " << value << std::endl;
+    }
+
+    std::ofstream result_file("result.bin", std::ios::binary);
+    result_file.write(reinterpret_cast<char*>(result.data()), result.size() * sizeof(value_t));
     return 0;
 }
